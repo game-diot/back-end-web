@@ -1,0 +1,698 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Express/Node入门</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(50, 48, 44, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-default_background {
+	color: rgba(50, 48, 44, 1);
+}
+.highlight-gray_background {
+	background: rgba(248, 248, 247, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(248, 243, 252, 1);
+}
+.highlight-pink_background {
+	background: rgba(252, 241, 246, 1);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(248, 248, 247, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(248, 243, 252, 1);
+}
+.block-color-pink_background {
+	background: rgba(252, 241, 246, 1);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: undefined; }
+.select-value-color-pink { background-color: rgba(225, 136, 179, 0.27); }
+.select-value-color-purple { background-color: rgba(168, 129, 197, 0.27); }
+.select-value-color-green { background-color: rgba(123, 183, 129, 0.27); }
+.select-value-color-gray { background-color: rgba(84, 72, 49, 0.15); }
+.select-value-color-transparentGray { background-color: undefined; }
+.select-value-color-translucentGray { background-color: undefined; }
+.select-value-color-orange { background-color: rgba(224, 124, 57, 0.27); }
+.select-value-color-brown { background-color: rgba(210, 162, 141, 0.35); }
+.select-value-color-red { background-color: rgba(244, 171, 159, 0.4); }
+.select-value-color-yellow { background-color: rgba(236, 191, 66, 0.39); }
+.select-value-color-blue { background-color: rgba(93, 165, 206, 0.27); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="1ed694d5-ea46-809a-86bc-ea389c83b08a" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">😶</span></div><h1 class="page-title">Express/Node入门</h1><p class="page-description"></p></header><div class="page-body"><p id="1f2694d5-ea46-8004-8f9d-c58fd2c2e770" class=""><mark class="highlight-red"><strong><span style="border-bottom:0.05em solid">什么是Node：</span></strong></mark></p><p id="1f2694d5-ea46-8064-bd40-d4e4a478ab86" class="">Node.js时应该跨平台时的运行环境，可以使用JS创建服务器端工具和应用程序，运行时主要用于浏览器上下文之外（即可以直接运行在计算机或服务器操作系统上。）<div class="indented"><ul id="1f2694d5-ea46-80dd-bf52-c15ba2c2a896" class="bulleted-list"><li style="list-style-type:disc">Node.js的优点，对于Web服务器而言<ul id="1f2694d5-ea46-80fd-91a1-e076c728be40" class="bulleted-list"><li style="list-style-type:circle">性能优化</li></ul><ul id="1f2694d5-ea46-8024-abbf-dd9956c775d3" class="bulleted-list"><li style="list-style-type:circle">使用JS代码</li></ul><ul id="1f2694d5-ea46-8046-a398-ebaad87d4b08" class="bulleted-list"><li style="list-style-type:circle">Node包管理器-NPM</li></ul><ul id="1f2694d5-ea46-803b-97e4-dc1512e52255" class="bulleted-list"><li style="list-style-type:circle">Node.js可移植到不同系统平台</li></ul><ul id="1f2694d5-ea46-80c4-ae78-d99039745a85" class="bulleted-list"><li style="list-style-type:circle">第三方生态系统和开发者社区较为活跃</li></ul></li></ul></div></p><p id="1f2694d5-ea46-80f8-a22f-e9e42c1a13fa" class="">
+</p><p id="1f2694d5-ea46-808d-8b08-df9dab965528" class=""><strong><span style="border-bottom:0.05em solid">使用Node.js的HTTP包创建简单的web服务器</span></strong></p><ul id="1f2694d5-ea46-80e5-96eb-c63a37bfa29e" class="bulleted-list"><li style="list-style-type:disc">示例：创建web服务器，监听URL http：//127.0.0.1：8000/的各种HTTP请求，接收到请求后，脚本做出响应：“返回字符串Hello World”。(默认安装完Node.js)<ul id="1f2694d5-ea46-809e-a192-e8433882b099" class="bulleted-list"><li style="list-style-type:circle">终端创建文件夹存放项目<ul id="1f2694d5-ea46-8032-af4d-f2bedbff8ee0" class="bulleted-list"><li style="list-style-type:square">mkdir test-node</li></ul></li></ul><ul id="1f2694d5-ea46-80a3-8754-f961fbc88ab9" class="bulleted-list"><li style="list-style-type:circle">进入文件夹<ul id="1f2694d5-ea46-80e0-a280-d51a46bbd8ed" class="bulleted-list"><li style="list-style-type:square">cd test-node</li></ul></li></ul><ul id="1f2694d5-ea46-8066-bd39-ea89bd50b7ba" class="bulleted-list"><li style="list-style-type:circle">新建文件 ”hello.js“，并输入以下内容<blockquote id="1f2694d5-ea46-802d-9c44-ef01ea6cf631" class="">// 调用 HTTP 模块<br/>const http = require(&quot;http&quot;);<br/><p id="1f2694d5-ea46-80ea-ad6d-f6566ea8aa5f" class="">// 创建 HTTP 服务器并监听 8000 端口的所有请求<br/>http<br/>.createServer((request, response) =&gt; {<br/>// 用 HTTP 状态码和内容类型来设定 HTTP 响应头<br/>response.writeHead(200, { &quot;Content-Type&quot;: &quot;text/plain&quot; });<br/>//发送响应体“hello world \n”<br/>response.end（“{hello world\n”）<br/></p><p id="1f2694d5-ea46-8029-b282-d23adc54fdf5" class="">})<br/>.listen(8000);<br/></p><p id="1f2694d5-ea46-808d-a11d-e472d618c66f" class="">// 在控制台打印访问服务器的 URL<br/>console.log(&quot;服务器运行于 <br/><a href="http://127.0.0.1:8000/">http://127.0.0.1:8000/</a>&quot;);</p></blockquote></li></ul><ul id="1f2694d5-ea46-803a-b721-d58098e00f37" class="bulleted-list"><li style="list-style-type:circle">保存文件夹，返回终端</li></ul><ul id="1f2694d5-ea46-8021-adfa-db3388fb825d" class="bulleted-list"><li style="list-style-type:circle">输入命令启动服务端<ul id="1f2694d5-ea46-80ca-a5fa-ebf2d0d4e017" class="bulleted-list"><li style="list-style-type:square">node “hello.js”</li></ul></li></ul><ul id="1f2694d5-ea46-8015-b128-d9383f807719" class="bulleted-list"><li style="list-style-type:circle">最后浏览器输入URL，查看服务端响应结果</li></ul></li></ul><p id="1f2694d5-ea46-8049-9fa6-fad4b55797e1" class="">
+</p><p id="1f2694d5-ea46-8038-bdce-e52b794fa785" class=""><strong><span style="border-bottom:0.05em solid">Web框架</span></strong></p><p id="1f2694d5-ea46-8014-92d5-c49fd303a9f3" class="">Node本身不支持web开发任务，需要进行具体的处理，比如运行其他HTTP动词（GET、POST、DELETE等）、分别处理不同URL路径的请求（路由）、托管静态文件、使用模板来动态创建响应。</p><p id="1f2694d5-ea46-8079-8ea6-f5c3126c161e" class="">需要使用web框架或自我编写代码</p><p id="1f2694d5-ea46-805a-95fe-d7315ac29b2e" class="">
+</p><p id="1f2694d5-ea46-804f-a89c-ddfea5ef3f87" class=""><strong><span style="border-bottom:0.05em solid">什么是Express</span></strong></p><p id="1f2694d5-ea46-8050-89f5-cbacf3bf245d" class="">Express是Node框架，具有以下机制优点<div class="indented"><ul id="1f2694d5-ea46-8037-b13c-f1c45fd5d56b" class="bulleted-list"><li style="list-style-type:disc">为不同的URL路径使用不同的HTTP动词请求（路由）编写处理程序</li></ul><ul id="1f2694d5-ea46-8052-adc4-e1004e9946f8" class="bulleted-list"><li style="list-style-type:disc">集成了视图渲染，以便将数据插入模板来生成响应</li></ul><ul id="1f2694d5-ea46-80b9-ad65-f316efcc7084" class="bulleted-list"><li style="list-style-type:disc">设置常见web应用设置，比如用于连接的端口，以及渲染响应模板的位置</li></ul><ul id="1f2694d5-ea46-8022-9fed-ed386a5a283d" class="bulleted-list"><li style="list-style-type:disc">在请求处理管道的任何位置添加额外的请求处理中间件</li></ul></div></p><ul id="1f2694d5-ea46-8098-baeb-cd33c07cf4c7" class="bulleted-list"><li style="list-style-type:disc">Express是极简风格，开发者创建类各类兼容的中间件包解决web开发问题。这些库可以实现cookie、会话、用户登录、URL参数、POST数据、安全头等功能。在Express中间件网页中找到包列表<a href="https://www.expressjs.com.cn/resources/middleware.html">https://www.expressjs.com.cn/resources/middleware.html</a></li></ul><p id="1f2694d5-ea46-80c2-8280-f4023e957f3b" class="">
+</p><p id="1f2694d5-ea46-80d2-9edf-f1e91cf70770" class=""><strong><span style="border-bottom:0.05em solid">Node和Express历史</span></strong></p><p id="1f2694d5-ea46-80f3-8222-c9675c39131e" class=""><strong><span style="border-bottom:0.05em solid">Node和Express框架流行</span></strong></p><p id="1f2694d5-ea46-80a6-bb57-fdd36bdb6da6" class=""><strong><span style="border-bottom:0.05em solid">Exoress是高度包容的框架可以将兼容包任意插入到请求链</span></strong></p><p id="1f2694d5-ea46-8014-926d-d1281abd464a" class="">
+</p><p id="1f2694d5-ea46-802b-a3b7-d9e435e9bd63" class=""><strong><span style="border-bottom:0.05em solid">Express代码是怎样的：</span></strong></p><ul id="1f2694d5-ea46-8017-8942-c82456b45107" class="bulleted-list"><li style="list-style-type:disc">传统的数据驱动型网站，web应用用于等待来自浏览器或者其他客户端的HTTP请求。web应用接收到请求之后，根据URL的模式，以及POST数据和GET数据可能包含的信息，来解析请求所需的功能，根据请求的内容，web应用会从数据库中读写信息等操作来满足请求，之后web应用返回浏览器响应，通常是动态生成一些HTML，页面中用所得的信息填充占位符</li></ul><ul id="1f2694d5-ea46-80fe-b1dc-c4175a0cc752" class="bulleted-list"><li style="list-style-type:disc">使用Express<ul id="1f2694d5-ea46-8042-97d8-e32fa641a862" class="bulleted-list"><li style="list-style-type:circle">可以调用特定的HTTP动词（GET、POST、SET等）函数和URL模式（路由）函数，也可以指定模板引擎的种类、模板文件的位置以及渲染相应所使用的模板</li></ul><ul id="1f2694d5-ea46-8057-9a90-fc4511a2056b" class="bulleted-list"><li style="list-style-type:circle">可以使用Express中间件来添加对cookie、绘画、用户、获取POST/GET参数，等</li></ul><ul id="1f2694d5-ea46-803d-9ef8-e786400e8154" class="bulleted-list"><li style="list-style-type:circle">可以使用Node支持的任何类型数据库（Express本身没有定义任何数据库行为）</li></ul></li></ul><p id="1f2694d5-ea46-801b-a30a-d5335d6c8004" class="">
+</p><p id="1f2694d5-ea46-8030-b149-da2c151c19f3" class=""><strong><span style="border-bottom:0.05em solid">Express和Node的常见知识点：</span></strong></p><p id="1f2694d5-ea46-80c5-bfaf-d9ffdb6afa37" class=""><strong>【以Express的Helloworld为例】：</strong></p><blockquote id="1f2694d5-ea46-808f-b2fa-da94249712df" class="">const express = require(&quot;express&quot;);<br/>const app = express();<br/><p id="1f2694d5-ea46-8068-8aac-cf02a22133ee" class="">app.get(&quot;/&quot;, (req, res) =&gt; {<br/>res.send(&quot;Hello World!&quot;);<br/>});<br/></p><p id="1f2694d5-ea46-80e9-8732-ce32d44cbeda" class="">app.listen(3000, () =&gt; {<br/>console.log(&quot;示例应用正在监听 3000 端口 !&quot;);<br/>});<br/></p></blockquote><ul id="1f2694d5-ea46-80e4-b521-f4019655d42c" class="bulleted-list"><li style="list-style-type:disc">前两行通过require（）导入Express模块，并创建了一个express应用，命名为app。<ul id="1f2694d5-ea46-8029-97cc-c907c802c5b0" class="bulleted-list"><li style="list-style-type:circle">它可以进行路由HTTP、配置中间件、渲染HTML视图、注册模板引擎以及修改应用程序设置等操作，进而控制应用的行为（例如，环境模式，路由定义是否为区分大小写等）</li></ul></li></ul><ul id="1f2694d5-ea46-80a4-872c-e1ab28b8c614" class="bulleted-list"><li style="list-style-type:disc">代码中间部分（app.get代码块）是路由定义<ul id="1f2694d5-ea46-801b-b83f-eb1cf215289e" class="bulleted-list"><li style="list-style-type:circle">app.get（）方法制定了一个callback回调函数，该函数没见听到一个关于站点根目录路径”/“的HTTP GET请求时调用</li></ul><ul id="1f2694d5-ea46-8048-b012-e2000757dec3" class="bulleted-list"><li style="list-style-type:circle">此回调函数以一个请求和响应对象作为参数，并直接调用响应的send（）来返回字符串Hello world</li></ul></li></ul><ul id="1f2694d5-ea46-801e-9724-f711d42c0f8f" class="bulleted-list"><li style="list-style-type:disc">最后代码块指定3000端口运行服务器，并在控制台打印日志<ul id="1f2694d5-ea46-802f-83a9-e34c12ee023d" class="bulleted-list"><li style="list-style-type:circle">服务器启动时可以浏览器访问localhost：3000，查看返回响应内容。</li></ul></li></ul><p id="1f2694d5-ea46-80dc-b05e-f2aaf6889bc6" class="">
+</p><p id="1f2694d5-ea46-80cc-b658-f16494a5b6d9" class=""><strong>【导入和创建模块】：</strong></p><ul id="1f2694d5-ea46-808b-ac48-f72828064cfa" class="bulleted-list"><li style="list-style-type:disc">模块是JS库或文件，可以使用Node的require（）函数将他们导入其他代码中，Express本身就是模块，Express应用中使用的中间件和数据库都是<ul id="1f2694d5-ea46-80a9-9a79-ea2ec586e797" class="bulleted-list"><li style="list-style-type:circle">下面代码以Express框架为例，展示如何通过名字来导入模块，首先调用require（）函数，字符串指定模块名字，然后调用返回的对象来创建Express应用，然后就可以访问应用程序对象的属性和函数<ul id="1f2694d5-ea46-80a5-a6b1-c969acb9d061" class="bulleted-list"><li style="list-style-type:square">const express = require（“express”）；</li></ul><ul id="1f2694d5-ea46-804c-887c-ffcf41570d54" class="bulleted-list"><li style="list-style-type:square">const app = express（）</li></ul></li></ul></li></ul><p id="1f2694d5-ea46-800b-ba03-cddef2fba657" class=""><strong>可以创建自定义模块，并使用相同的方法是导入</strong></p><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="1f2694d5-ea46-80ed-8291-e3128c61f9fd"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%"><p id="1f2694d5-ea46-8033-9ac5-e0fe3339b85f" class=""><strong>备注：</strong> 你一定会有自建模块的<strong>需求</strong>，因为这可以让代码管理更有序。单文件应用是很难理解和维护的。使用模块还有助于管理名字空间，因为在使用模块时只会导入模块中显式导出的变量。</p></div></figure><ul id="1f2694d5-ea46-8000-8956-cc0a2d3b2bd6" class="bulleted-list"><li style="list-style-type:disc">为了让对象暴露在模块之外，需要把他们设置为exports对象的附加属性即可，<ul id="1f2694d5-ea46-80e6-8f9c-c2f4d6c693bc" class="bulleted-list"><li style="list-style-type:circle">例如下面的square.js模块导出来area（）和perimeter（）方法<blockquote id="1f2694d5-ea46-808e-a2cb-d5a45242639e" class="">exports.area = (width) =&gt; {<br/>return width * width;<br/>};<br/>exports.perimeter = (width) =&gt; {<br/>return 4 * width;<br/>};<br/></blockquote></li></ul><ul id="1f2694d5-ea46-8010-be3c-ea2663e00225" class="bulleted-list"><li style="list-style-type:circle">可以使用require导入这个模块，然后调用导出的方法，用法如下：<blockquote id="1f2694d5-ea46-8063-be9e-cee6377eaa04" class="">const square = require(&quot;./square&quot;);<br/>// 这里 require() 了文件名，省略了 .js 扩展名（可选）<br/>console.log(&quot;边长为 4 的正方形面积为 &quot; + square.area(4));<br/></blockquote></li></ul><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="1f2694d5-ea46-8014-ae4e-ed8ecfc53267"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%"><p id="1f2694d5-ea46-80ba-8857-d1879603161f" class="">为模块指定绝对路径也可以</p></div></figure><ul id="1f2694d5-ea46-80ce-b9ad-f058ed08fad2" class="bulleted-list"><li style="list-style-type:circle">以此赋值不仅能构建一个单一的属性，还能构建一个完整的对象，可以向如下把对象赋值给module.export（也可以让export对象直接作为一个构造器或另一个函数）<blockquote id="1f2694d5-ea46-806c-b6f6-eace15afc7c7" class="">module.exports = {<br/>area: (width) =&gt; {<br/>return width * width;<br/>},<br/>perimeter: (width) =&gt; {<br/>return 4 * width;<br/>},<br/>};<br/></blockquote></li></ul></li></ul><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="1f2694d5-ea46-8063-b80d-ce1caa3a12b6"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%"><p id="1f2694d5-ea46-8018-b909-f943ad5b1838" class=""><strong>备注：</strong> 在一个既定的模块内，可以把 <code>exports</code> 想象成 <code>module.exports</code> 的 <a href="https://nodejs.cn/api/modules.html#modules_exports_shortcut">快捷方式</a>。<code>exports</code> 本质上就是在模块初始化前为 <code>module.exports</code> 的值进行初始化的一个变量。这个值是对一个对象（这里是空对象）的引用。这意味着 <code>exports</code> 与 <code>module.exports</code> 引用了同一个对象，也意味着如果为 <code>exports</code> 赋其他值不会影响到 <code>module.exports</code>。</p></div></figure><p id="1f2694d5-ea46-8098-bfb0-cbeeb1cbbbcb" class="">
+</p><p id="1f2694d5-ea46-8012-97b6-d9a8ccccd285" class=""><strong>【使用异步API】：</strong></p><ul id="1f2694d5-ea46-8000-8c3b-dd107e58a87b" class="bulleted-list"><li style="list-style-type:disc">JS代码在完成需要时间的操作时，经常会使用异步API来取代同步API。</li></ul><ul id="1f2694d5-ea46-808c-ab3f-e446caa56b80" class="bulleted-list"><li style="list-style-type:disc">同步API下，每个操作完成后才进行下一个操作。<ul id="1f2694d5-ea46-807c-ada6-e399f9371436" class="bulleted-list"><li style="list-style-type:circle">例如，下面日志函数为同步，他们将按照顺序将文本打印到控制台。<ul id="1f2694d5-ea46-8008-9db4-d394cc9bf4f9" class="bulleted-list"><li style="list-style-type:square">console.log（“first”）；</li></ul><ul id="1f2694d5-ea46-80b1-a590-f3ab978c9131" class="bulleted-list"><li style="list-style-type:square">console.log（“second”）</li></ul></li></ul></li></ul><ul id="1f2694d5-ea46-8036-af67-f887fba47252" class="bulleted-list"><li style="list-style-type:disc">异步API下，一个操作开始后（在其完成之前）会立即返回，一旦操作完成，API将使用机制来执行附加操作<ul id="1f2694d5-ea46-80b0-9559-cc0e6f2a2346" class="bulleted-list"><li style="list-style-type:circle">例如下面代码，将打印“second”，“first”，这是因为虽然先调用了setTimeout（）方法并立即返回，但他的操作要等3秒钟后才完成<ul id="1f2694d5-ea46-803c-a959-cb7707ce4636" class="bulleted-list"><li style="list-style-type:square">setTimeout（（）= &gt; {<ul id="1f2694d5-ea46-80d6-93e5-d0c5a9b31c67" class="bulleted-list"><li style="list-style-type:disc">console.log(”first”);</li></ul><ul id="1f2694d5-ea46-80f4-848a-f80f7e9692c7" class="bulleted-list"><li style="list-style-type:disc">},3000）;</li></ul></li></ul><ul id="1f2694d5-ea46-80d2-a0ba-f190482add2f" class="bulleted-list"><li style="list-style-type:square">console.log(”second”);</li></ul></li></ul></li></ul><ul id="1f2694d5-ea46-8020-9234-da330c549322" class="bulleted-list"><li style="list-style-type:disc">在Node中使用无阻塞API甚至比在浏览器中更为重要，因为Node是一个单线程事件驱动的执行环境，<ul id="1f2694d5-ea46-80b1-9c8d-c50b23b45737" class="bulleted-list"><li style="list-style-type:circle">“单线程”意味着对服务器的所有请求运行在同一个线程上，而不是分布在不同的进程上，这个模式在速度和管理服务器资源方面效率很高，也意味着如果以同步方式调用的函数占用了很长时间，不仅会阻塞当前请求，还会阻塞当前web应用其他所有请求。</li></ul></li></ul><ul id="1f2694d5-ea46-8035-ab1f-ffd9daf9285b" class="bulleted-list"><li style="list-style-type:disc">有很多方法让异步API通知当前应用它已执行完毕，最常用的是在调用异步API时注册一个回调函数，在API操作结束之后将回调，这也是上面代码所用的方法。<figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="1f2694d5-ea46-80c5-84c0-fdd64d806618"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%"><p id="1f2694d5-ea46-80ee-8972-ccdd751fcc40" class="">如果一系列独立的异步操作必需按顺序执行，那么使用回调可能会非常混乱，因为这会导致多级嵌套回调，使用async等模块、迁移至ES6使用Promise等特性可以解决问题</p></div></figure><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="1f2694d5-ea46-80a1-89f8-f3fba85acf1a"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%"><p id="1f2694d5-ea46-803d-8729-fee145fc94c6" class="">Node和Express有一个一般性约定，即：使用错误优先回调。这个约定要求回调函数的第一个参数时错误值，而后续的参数包含成功数据。</p></div></figure></li></ul><p id="1f2694d5-ea46-8008-9e05-db1d064a7cbb" class="">
+</p><p id="1f2694d5-ea46-8056-90c2-f13c8a1fba2e" class="">【创建路由处理器-Route handler】</p><ul id="1f2694d5-ea46-80d7-a632-fefb30c6cdec" class="bulleted-list"><li style="list-style-type:disc">上文的Hello World示例中定义了一个（回调）路由处理函数来处理对站点根目录（‘/’）的HTTP GET请求<ul id="1f2694d5-ea46-80ee-a77d-dc222bf553ca" class="bulleted-list"><li style="list-style-type:circle">app.get（“/”，（req，res）⇒{<ul id="1f2694d5-ea46-80c7-a586-e4777776a1fb" class="bulleted-list"><li style="list-style-type:square">res.send（“hello world”）；</li></ul></li></ul><ul id="1f2694d5-ea46-805b-979e-d604fac0bad9" class="bulleted-list"><li style="list-style-type:circle">}）；</li></ul></li></ul><ul id="1f2694d5-ea46-801f-9bc4-f3a8b3f58f8f" class="bulleted-list"><li style="list-style-type:disc">回调函数将请求和响应对象作为参数，该函数直接调用响应的send（）来返回字符串“helloworld”。<ul id="1f2694d5-ea46-800a-b5aa-f7079957dc48" class="bulleted-list"><li style="list-style-type:circle">同时有很多其他的相应方法可以结束请求/响应周期，例如，通过调用res.json（）来发送JSON响应、调用res.sendFile（）来发送文件</li></ul><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="1f2694d5-ea46-80b5-8632-c131750cef90"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%"><p id="1f2694d5-ea46-80ec-ab86-f63a7be714a6" class="">虽然回调函数的参数命名没有限制，但是当调用回调时，第一个参数将始终为请求，第二个参数始终未响应，合理的命名可以在回调体中使用的对象更容易识别。</p></div></figure></li></ul><ul id="1f2694d5-ea46-8050-848f-e864333245c4" class="bulleted-list"><li style="list-style-type:disc">Express应用对象提供了为其他HTTP动词定义路由处理器的方法，大多数处理器的方法完全一致。<ul id="1f2694d5-ea46-8095-abe3-ddbf9e41edb5" class="bulleted-list"><li style="list-style-type:circle">checkout（）、copy（）、delete（）、get（）、head（）、lock（）、merge（）、mkactivity（）、mkcol（）、move（）、m-search（）、notify（）、options（）、patch（）、post（）、purge（）、put（）、report（）、search（）、subscribe（）、trace（）、unlock（）、unsubscribe（）</li></ul></li></ul><ul id="1f2694d5-ea46-804e-91ec-d3518a8ad042" class="bulleted-list"><li style="list-style-type:disc">有一个特殊的路由方法app.all（），它可以在响应任何HTTP方法时调用，用于在特定路径上为所有请求方法加载中间件函数<ul id="1f2694d5-ea46-8072-90ab-ea057c4be8fd" class="bulleted-list"><li style="list-style-type:circle">示例，其中处理程序，将在监听到针对/secret的任意HTTP动词的请求后执行<ul id="1f2694d5-ea46-8070-83cb-e539a5f85b1d" class="bulleted-list"><li style="list-style-type:square">app.all（“/secret”，（req，res，next）⇒{<ul id="1f2694d5-ea46-80c5-a645-d1f0c922fd3e" class="bulleted-list"><li style="list-style-type:disc">console.log（“访问文件…”）；</li></ul><ul id="1f2694d5-ea46-8005-99a9-c49ce5554e1f" class="bulleted-list"><li style="list-style-type:disc">next（）；//控制权传递给下一个·处理器</li></ul></li></ul><ul id="1f2694d5-ea46-80aa-91a7-fcf5ac06c1eb" class="bulleted-list"><li style="list-style-type:square">}）；</li></ul></li></ul><ul id="1f2694d5-ea46-80b4-b033-f04676f668eb" class="bulleted-list"><li style="list-style-type:circle">路由器可以匹配URL中特定的字符串模式，并从URL中提取一些值作为参数传递给路由处理程序（最为请求对象的属性）。</li></ul></li></ul><ul id="1f2694d5-ea46-803b-84db-dc96ef68509e" class="bulleted-list"><li style="list-style-type:disc">可以为站点的特定部分提供一组路由处理器（使用公共路由前缀进行组合）。（比如对一个有维基内容的站点，可以把所有维基相关的路由放在同一个文件里，使用路由前缀*‘/wiki/’*访问他们）。在Express中可以使用express.Router对象实现<ul id="1f2694d5-ea46-8078-be28-c6beeb8f9639" class="bulleted-list"><li style="list-style-type:circle">例如，可以把所有维基相关的路由都放在一个wiki.js模块中，然后导出Router对象，如下<blockquote id="1f2694d5-ea46-8048-a6a4-d907eb2e1a07" class="">// wiki.js - 维基路由模块<p id="1f2694d5-ea46-8029-b3e4-ef8f362d8ad7" class="">const express = require(&quot;express&quot;);<br/>const router = express.Router();<br/></p><p id="1f2694d5-ea46-8085-a96b-dc38613d480e" class="">// 首页路由<br/>router.get(&quot;/&quot;, (req, res) =&gt; {<br/>res.send(&quot;维基首页&quot;);<br/>});<br/></p><p id="1f2694d5-ea46-80fd-bc82-e50e1e2c107a" class="">// “关于”页面路由<br/>router.get(&quot;/about&quot;, (req, res) =&gt; {<br/>res.send(&quot;关于此维基&quot;);<br/>});<br/></p><p id="1f2694d5-ea46-8068-87de-dde859e95a3d" class="">module.exports = router;</p></blockquote></li></ul><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="1f2694d5-ea46-80dc-b1cd-ea54eeb4133c"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%"><p id="1f2694d5-ea46-8088-8e5a-e7a0d17a9944" class="">向Router对象添加路由就像之前为app对象添加路由一样</p></div></figure><ul id="1f2694d5-ea46-80bc-80fb-cf4528332b98" class="bulleted-list"><li style="list-style-type:circle">首先require（）路由模块（wiki.js），然后再Express应用中调用了use（）把Router添加到中间件处理路径中，就可以在主应用中使用这个模块中的路由处理器了。<ul id="1f2694d5-ea46-8027-a32b-c8cb080b683f" class="bulleted-list"><li style="list-style-type:square">路由路径有两条：/wiki和/wiki/about/<ul id="1f2694d5-ea46-80d9-ae06-de846b115ac4" class="bulleted-list"><li style="list-style-type:disc">const wiki = require（”./wiki.js“）；<ul id="1f2694d5-ea46-802f-b84c-cc0cceb41481" class="bulleted-list"><li style="list-style-type:circle">// …</li></ul></li></ul><ul id="1f2694d5-ea46-800b-a616-d5c9aeef45ab" class="bulleted-list"><li style="list-style-type:disc">app.use（”/wiki“，wiki）</li></ul></li></ul></li></ul></li></ul><p id="1f2694d5-ea46-8048-8569-e7b20b0d2231" class=""><strong>【使用中间件】：</strong></p><ul id="1f2694d5-ea46-80ad-a3eb-dd80dbd7e789" class="bulleted-list"><li style="list-style-type:disc">中间件在Express应用中广泛使用，从哪个提供错误处理静态文件、到压缩HTTP响应等等。路由函数可以通过向HTTP哭护短返回一些响应来结束HTTP请求-响应周期，而中间件函数通常是对请求或响应执行某些操作，然后调用栈里的下一个函数，可能是其他中间件或路由处理器，调用顺序由开发者决定<figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="1f2694d5-ea46-80bf-a362-fb7da6a47158"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%"><p id="1f2694d5-ea46-802e-b38f-ed148f5f32b7" class="">中间件可以执行任何操作，运行任何代码，更改请求和响应对象，也可以结束”请求-响应“周期。如果没有结束循环，则必须调用next（）将控制传递给下一个中间件函数（否则请求将成为悬挂请求。）</p></div></figure></li></ul><ul id="1f2694d5-ea46-80dc-9af1-ecef47515dd6" class="bulleted-list"><li style="list-style-type:disc">大多数应用会使用第三方中间件来简化常见的web开发任务，比如cookie、会话、用户身份验证、访问请求POST和JSON数据、日志记录等。NPM有提供其他Express包</li></ul><ul id="1f2694d5-ea46-8003-8165-f51c70d1cb42" class="bulleted-list"><li style="list-style-type:disc"><strong>使用第三方中间件：</strong><ul id="1f2694d5-ea46-8020-aacd-e90813687825" class="bulleted-list"><li style="list-style-type:circle">首先使用NPM将其安装到当前应用中，比如要安装morgan HTTP请求记录器中间件，可以这样做<ul id="1f2694d5-ea46-8012-9fce-e758f481d0dc" class="bulleted-list"><li style="list-style-type:square">npm install morgan</li></ul></li></ul><ul id="1f2694d5-ea46-80c2-b6cc-ee82f140ebcd" class="bulleted-list"><li style="list-style-type:circle">然后对Express应用对象调用use（）将该中间件添加到栈<ul id="1f2694d5-ea46-802b-8280-fb9681b53f3d" class="bulleted-list"><li style="list-style-type:square">const express = require（”express“）；</li></ul><ul id="1f2694d5-ea46-80f2-9895-c5ed36ad493b" class="bulleted-list"><li style="list-style-type:square">const logger = require（”morgan“）；</li></ul><ul id="1f2694d5-ea46-80fd-b29d-c286e520a32d" class="bulleted-list"><li style="list-style-type:square">const app = express（）；</li></ul><ul id="1f2694d5-ea46-804f-9f2f-f9444b2871dc" class="bulleted-list"><li style="list-style-type:square">app.use（logger（”dev“））</li></ul><ul id="1f2694d5-ea46-802e-b48e-e5f37e77d391" class="bulleted-list"><li style="list-style-type:square">…</li></ul></li></ul><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="1f2694d5-ea46-8073-91c4-d380173a6fb1"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%"><p id="1f2694d5-ea46-80f6-9f89-f660e2a25eff" class="">中间件和路由函数时按声明顺序调用的，一些中间件的引入顺序很重要（例如，如果会话中间件依赖于cookie中间件，就必须先添加cookie处理器）。绝大多数全局要先调用中间件后设置路由，否则路由处理器将无法访问中间件的功能</p></div></figure></li></ul><ul id="1f2694d5-ea46-8026-8e91-cdc3c2f288f4" class="bulleted-list"><li style="list-style-type:disc">可以自己编写中间件函数，这是基本技能（仅仅为了创建错误处理代码也需要）。中间件函数和路由处理回调之间的唯一区别是：中间件函数有第三个参数next，在中间件不会结束请求周期时应调用这个next（它包含中间件函数调用后应调用的下一个函数）</li></ul><ul id="1f2694d5-ea46-80e2-9169-c163a2551a5b" class="bulleted-list"><li style="list-style-type:disc">可以使用app.use（）将中间件函数添加到所有相应的处理链中，或者是对特定的HTTP动词使用关联方法：app.get（）、apppost（）等，虽然在调用app.use（）时路由是可选的，但两种情况都是以相同的方式取指定路由<ul id="1f2694d5-ea46-8054-8957-f6cabd2707ba" class="bulleted-list"><li style="list-style-type:circle">示例，显示如何使用这两种方法取添加中间件功能，以及是否使用路由<ul id="1f2694d5-ea46-809f-aebe-fe418ee07420" class="bulleted-list"><li style="list-style-type:square">const express = require（”express“）；</li></ul><ul id="1f2694d5-ea46-8079-a50f-c085f8286528" class="bulleted-list"><li style="list-style-type:square">const app = express（）；<ul id="1f2694d5-ea46-802a-8e87-c7d395bfbed1" class="bulleted-list"><li style="list-style-type:disc">//示例中间件函数</li></ul></li></ul><ul id="1f2694d5-ea46-805f-bf4a-fb4b35278e6b" class="bulleted-list"><li style="list-style-type:square">const a_middleware_function = （req，res，next） ⇒{<ul id="1f2694d5-ea46-80b5-b123-c06fbae8e95b" class="bulleted-list"><li style="list-style-type:disc">//执行操作</li></ul><ul id="1f2694d5-ea46-8074-b809-f410dfe2aa26" class="bulleted-list"><li style="list-style-type:disc">next（）//调用next（），Express将调用处理链中下一个中间件函数</li></ul></li></ul><ul id="1f2694d5-ea46-800f-b5a6-fb5e46cf55aa" class="bulleted-list"><li style="list-style-type:square">}； <ul id="1f2694d5-ea46-8010-85a6-e4defe4d68b3" class="bulleted-list"><li style="list-style-type:disc">//使用use（）为所有路由和动词添加该函数</li></ul></li></ul><ul id="1f2694d5-ea46-8068-acb4-f7f2e219bb45" class="bulleted-list"><li style="list-style-type:square">app.use（a_middleware_function）;<ul id="1f2694d5-ea46-8006-935a-e105e59bdc7a" class="bulleted-list"><li style="list-style-type:disc">//使用use（）为一个特定的路由添加该函数</li></ul></li></ul><ul id="1f2694d5-ea46-806d-ad86-df33d320f4f2" class="bulleted-list"><li style="list-style-type:square">app.use（”/someroute“，a_middleware_function）;<ul id="1f2694d5-ea46-807d-845a-f8abd0dfb47d" class="bulleted-list"><li style="list-style-type:disc">//为一个特定的HTTP动词和路由添加该函数</li></ul></li></ul><ul id="1f2694d5-ea46-8062-a3b0-d3311abc1ffa" class="bulleted-list"><li style="list-style-type:square">app.get（”/“，a_middleware_function）；</li></ul><ul id="1f2694d5-ea46-80e8-b6d1-fc0f463fe80b" class="bulleted-list"><li style="list-style-type:square">app.listen（3000）</li></ul><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="1f2694d5-ea46-8071-8489-ce4f28b46a24"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%"><p id="1f2694d5-ea46-804a-a660-e0afc2995ea5" class="">上面代码中单独声明了中间件函数，并把它设置为回调函数，之前时把路由出路函数在使用时声明为回调函数，在JS中，两种方法都可行</p></div></figure></li></ul></li></ul><p id="1f2694d5-ea46-8005-adce-ff00aee98bc4" class="">
+</p><p id="1f2694d5-ea46-8085-8ba4-d5f215fea0c6" class=""><strong>【托管静态文件】：</strong></p><ul id="1f2694d5-ea46-8053-bb84-de610bd8ce56" class="bulleted-list"><li style="list-style-type:disc">可以使用express.static中间件来托管静态文件，包括图片、css、JS文件（static（）时Express提供的原生中间件函数之一）。<ul id="1f2694d5-ea46-8075-a030-e10959a425f5" class="bulleted-list"><li style="list-style-type:circle">例如可以通过下面代码来托管public文件夹，位于Node调用同一级<ul id="1f2694d5-ea46-803b-9798-ce1ec4b0bd1a" class="bulleted-list"><li style="list-style-type:square">app.use（express.static（”public“））；</li></ul></li></ul><ul id="1f2694d5-ea46-80e7-bf1f-e6b3b60dbdc2" class="bulleted-list"><li style="list-style-type:circle">现在public文件夹中的所有文件均可通过在根URL后直接添加文件名来访问<ul id="1f2694d5-ea46-80e8-b3d4-ff16b0de3c81" class="bulleted-list"><li style="list-style-type:square">例如<ul id="1f2694d5-ea46-80de-83a4-c3589fb3ae35" class="bulleted-list"><li style="list-style-type:disc">http：//localhost：3000/images/dog.jpg</li></ul><ul id="1f2694d5-ea46-8024-8cf1-fb10f84a4ac4" class="bulleted-list"><li style="list-style-type:disc">http：//localhost：3000/css/style.css</li></ul><ul id="1f2694d5-ea46-8004-8ccb-c83f9de69084" class="bulleted-list"><li style="list-style-type:disc">http：//localhost：3000/js/app.js</li></ul><ul id="1f2694d5-ea46-80df-9879-f81c1600dc51" class="bulleted-list"><li style="list-style-type:disc">http：//localhost：3000/about.html</li></ul></li></ul></li></ul><ul id="1f2694d5-ea46-80b5-951a-c40ee4aa34e8" class="bulleted-list"><li style="list-style-type:circle">可以通过多次调用static（）来托管多个文件夹，如果一个中间件函数找不到某个文件，直接传递给下一个中间件（中间件的调用顺序取决于声明顺序）<ul id="1f2694d5-ea46-80eb-a07e-e678ba6adef3" class="bulleted-list"><li style="list-style-type:square">app.use（express.static（“public”））；</li></ul><ul id="1f2694d5-ea46-8087-b553-db8e420c177a" class="bulleted-list"><li style="list-style-type:square">app.use（express.static（”media“））；</li></ul></li></ul><ul id="1f2694d5-ea46-8091-8a82-f21d45850af2" class="bulleted-list"><li style="list-style-type:circle">也可以为静态URL创建一个虚拟的前缀，而不是直接把文件添加到根URL中，<ul id="1f2694d5-ea46-80e5-865b-ce84431af1c9" class="bulleted-list"><li style="list-style-type:square">例如，这里指定装载路径，这些文件可以通过”/media“前缀调用：<ul id="1f2694d5-ea46-8062-b336-e72aa03f74d9" class="bulleted-list"><li style="list-style-type:disc">app.use（”/media“，express.static（”public“））；</li></ul></li></ul><ul id="1f2694d5-ea46-8013-9125-f9fa338969b7" class="bulleted-list"><li style="list-style-type:square">现在可以通过”/media“路径前缀来访问‘public‘文件夹里的文件<ul id="1f2694d5-ea46-80c7-b09b-c2481582a717" class="bulleted-list"><li style="list-style-type:disc">http：//localhost：3000/media/images/dog.jpg</li></ul><ul id="1f2694d5-ea46-805a-8f71-d8d7a1b575dc" class="bulleted-list"><li style="list-style-type:disc">http：//localhost：3000/media/video/cat.mp4</li></ul><ul id="1f2694d5-ea46-80dc-a605-d588b7f65fc6" class="bulleted-list"><li style="list-style-type:disc">http：//localhost：3000/media/cry.mp3</li></ul></li></ul></li></ul></li></ul><p id="1f2694d5-ea46-8004-8dec-d979362f05c2" class="">
+</p><p id="1f2694d5-ea46-80c0-9cd6-eb58d6a857bf" class=""><strong>【错误处理】：</strong></p><ul id="1f2694d5-ea46-8033-b1f0-f80e674a6ec6" class="bulleted-list"><li style="list-style-type:disc">用来处理错误的特殊中间件函数有四个参数（err，req，res，next）<ul id="1f2694d5-ea46-8041-830a-dfef44eea174" class="bulleted-list"><li style="list-style-type:circle">例如<ul id="1f2694d5-ea46-80b3-a992-dfaafaf511ab" class="bulleted-list"><li style="list-style-type:square">app.use（err，req，res，next）⇒{<ul id="1f2694d5-ea46-8075-b454-cd95ce47ec65" class="bulleted-list"><li style="list-style-type:disc">console.error（err.stack）；</li></ul><ul id="1f2694d5-ea46-8085-8ea4-d86eeb1233f8" class="bulleted-list"><li style="list-style-type:disc">res.status（500）.send（”出错了！“）；</li></ul></li></ul><ul id="1f2694d5-ea46-8035-809c-fcaacc805455" class="bulleted-list"><li style="list-style-type:square">}）；</li></ul></li></ul></li></ul><ul id="1f2694d5-ea46-8068-b709-d7612ef6db22" class="bulleted-list"><li style="list-style-type:disc">错误处理中间件可以是任何所需内容，但是必须在所有其他app.use（）和路由调用后才能调用，因此他们是需要处理程序中最后的中间件</li></ul><ul id="1f2694d5-ea46-8085-8182-e89bbcda41bf" class="bulleted-list"><li style="list-style-type:disc">Express内建了错误处理机制，可以协助处理app中没有被处理的错误，默认的错误处理中间件函数在中间件函数栈的末尾，如果一个错误传递给next（）而没有用错误处理器来处理，将启动内建的处理机制，栈跟踪的错误将回写给客户端</li></ul><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="1f2694d5-ea46-809e-8d45-ceac3b849500"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%"><p id="1f2694d5-ea46-80c2-b767-ee5624aeef04" class="">生产环境中不保留栈跟踪轨迹，可将环境变量NODE_ENV设置为’production‘来运行所需的生产环境</p><p id="1f2694d5-ea46-80cf-94ca-cae2796108a8" class="">HTTP404和其他错误状态码不作为错误处理，可使用中间件来自行处理这些状态</p></div></figure><p id="1f2694d5-ea46-8058-8ef5-f429cc450a71" class="">
+</p><p id="1f2694d5-ea46-80ba-b5fb-da13c71a2756" class=""><strong>【使用数据库】：</strong></p><ul id="1f2694d5-ea46-8087-95dc-d2261310555a" class="bulleted-list"><li style="list-style-type:disc">Express应用可以使用Node支持的所有数据库（Express本身没有定义任何数据库管理的附加行为或要求）。其中包括：PostgreSQL、MySQL、Redis、SQLite、MongoDB等等</li></ul><ul id="1f2694d5-ea46-8069-b882-fdff39b2e597" class="bulleted-list"><li style="list-style-type:disc">使用数据库前需要使用NPM来安装驱动程序，比如要安装NoSQL数据库MongoDB的驱动程序<ul id="1f2694d5-ea46-8005-88b6-e568d4d82e52" class="bulleted-list"><li style="list-style-type:circle">npm install mongodb</li></ul></li></ul><ul id="1f2694d5-ea46-8002-a755-e08acdce94d5" class="bulleted-list"><li style="list-style-type:disc">数据库可以安装在本地或云端，在Express代码中require（）驱动程序，链接，然后就可以执行增加、读取、更新、删除四种操作（CRUD）。<ul id="1f2694d5-ea46-80c7-9dbc-f2d1358dd94f" class="bulleted-list"><li style="list-style-type:circle">以下示例展示如何查找MongoDB表中的记录<blockquote id="1f2694d5-ea46-80d1-beca-ee9817251560" class="">// MongoDB 3.0 以上版本适用，老版本不适用。<br/>const MongoClient = require(&quot;mongodb&quot;).MongoClient;<br/><p id="1f2694d5-ea46-8042-8bff-d3d3a0895407" class="">MongoClient.connect(&quot;mongodb://localhost:27017/animals&quot;, (err, client) =&gt; {<br/>    if (err) {<br/>        throw err;<br/>    }<br/></p><p id="1f2694d5-ea46-8057-ae91-f344de320db0" class="">    let db = client.db(&quot;动物&quot;);<br/>    db.collection(&quot;哺乳动物&quot;)<br/>        .find()<br/>        .toArray((err, result) =&gt; {<br/>            if (err) throw err;<br/>            console.log(result);<br/>            client.close();<br/>        });<br/>});<br/></p></blockquote></li></ul></li></ul><ul id="1f2694d5-ea46-80c7-adc8-c4b6c5f13a7a" class="bulleted-list"><li style="list-style-type:disc">还有一种通过“对象关系映射（Objext Relational Mapper，简称ORM）”简介访问数据库的方法，可以把数据定义为“对象”或“模型“，然后由ORM根据给定的数据库格式搞定所有映射关系。<ul id="1f2694d5-ea46-80d2-b900-f686223468b6" class="bulleted-list"><li style="list-style-type:circle">这种方法可以使用JS对象的思维而无需直接使用数据库语法，同时传进的数据也有现成的检查工具</li></ul></li></ul><p id="1f2694d5-ea46-8000-bfa6-ccc422aed24a" class="">
+</p><p id="1f2694d5-ea46-8009-8517-ebdd7c3140d9" class=""><strong>【渲染数据（视图，view）】：</strong></p><ul id="1f2694d5-ea46-80c4-a6b9-c8eab417682d" class="bulleted-list"><li style="list-style-type:disc">模板引擎可以为输出文档的结构指定一个模板，在数据处先放置占位符，并于页面生成时填充。模板通常用于生成HTML<ul id="1f2694d5-ea46-8084-b0f9-c12673f3c629" class="bulleted-list"><li style="list-style-type:circle">在应用设置代码中生命力模板引擎的名称和位置，Express可以使用’views‘和’viewengines‘设置来寻找模板。<ul id="1f2694d5-ea46-80ef-9c11-c30f430937f4" class="bulleted-list"><li style="list-style-type:square">示例（需要是先安装包含模板库的包）：<ul id="1f2694d5-ea46-809c-adc4-fe17a42f279a" class="bulleted-list"><li style="list-style-type:disc">const express = require（”express“）；</li></ul><ul id="1f2694d5-ea46-80a1-810f-d97bb8b5eb1f" class="bulleted-list"><li style="list-style-type:disc">const app = express（）；<ul id="1f2694d5-ea46-8083-9623-faaa225881c8" class="bulleted-list"><li style="list-style-type:circle">//设置包含模板的文件夹（’views‘）</li></ul></li></ul><ul id="1f2694d5-ea46-80a8-ae0f-e95199e8580f" class="bulleted-list"><li style="list-style-type:disc">app.set（”views“，path.join（_dirname，”views“））；<ul id="1f2694d5-ea46-808d-8724-c17d341a6e75" class="bulleted-list"><li style="list-style-type:circle">//设置视图引擎，比如”some_template_engine_name“</li></ul></li></ul><ul id="1f2694d5-ea46-804c-b8e9-d6bb0a443688" class="bulleted-list"><li style="list-style-type:disc">app.set（”view engine“，”some_template_engine_name“）;</li></ul></li></ul><ul id="1f2694d5-ea46-806f-ba8c-ed57e27a192c" class="bulleted-list"><li style="list-style-type:square">模板的外观取决于所使用的引擎，假设一个模板文件名为”index&lt;template_extension&gt;“，其中包含数据变量’title‘和’message’两个占位符，可以在路由处理器函数中调用Response.render（）来创建并发送HTML响应<ul id="1f2694d5-ea46-80ad-9948-e749ec069e60" class="bulleted-list"><li style="list-style-type:disc">app.get（”/“，（req，res）⇒{<ul id="1f2694d5-ea46-8061-9dca-e5b3760868be" class="bulleted-list"><li style="list-style-type:circle">res.render（”index“，{title：”关于狗“，message：”狗厉害“}）；</li></ul></li></ul><ul id="1f2694d5-ea46-801f-862e-ee3d2ebe7459" class="bulleted-list"><li style="list-style-type:disc">}）；</li></ul></li></ul></li></ul></li></ul><p id="1f2694d5-ea46-80ec-9daf-c30062b6c2be" class="">
+</p><p id="1f2694d5-ea46-8020-aee4-c7893a40a2e1" class=""><strong>【文件结构】：</strong></p><p id="1f2694d5-ea46-801d-9dd3-e210a52d0147" class="">Express不对文件结构和组件的选用作任何约定。路由、视图、静态文件，以及其他应用具体逻辑均可按任意文件结构保存在任意数量的文件中。</p><p id="1f2694d5-ea46-80d3-a1c4-cedf627ba046" class="">也可以让整个Express应用保存在单一文件中，一般情况下，把应用按功能（比如账户管理、博客、论坛）和架构问题域（如MVC架构中的模型、视图、控制器）进行拆分是有意义的。</p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
