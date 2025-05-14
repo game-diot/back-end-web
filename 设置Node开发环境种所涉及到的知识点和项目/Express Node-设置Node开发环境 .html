@@ -1,0 +1,695 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Express/Node-设置Node开发环境</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(50, 48, 44, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-default_background {
+	color: rgba(50, 48, 44, 1);
+}
+.highlight-gray_background {
+	background: rgba(248, 248, 247, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(248, 243, 252, 1);
+}
+.highlight-pink_background {
+	background: rgba(252, 241, 246, 1);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(248, 248, 247, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(248, 243, 252, 1);
+}
+.block-color-pink_background {
+	background: rgba(252, 241, 246, 1);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: undefined; }
+.select-value-color-pink { background-color: rgba(225, 136, 179, 0.27); }
+.select-value-color-purple { background-color: rgba(168, 129, 197, 0.27); }
+.select-value-color-green { background-color: rgba(123, 183, 129, 0.27); }
+.select-value-color-gray { background-color: rgba(84, 72, 49, 0.15); }
+.select-value-color-transparentGray { background-color: undefined; }
+.select-value-color-translucentGray { background-color: undefined; }
+.select-value-color-orange { background-color: rgba(224, 124, 57, 0.27); }
+.select-value-color-brown { background-color: rgba(210, 162, 141, 0.35); }
+.select-value-color-red { background-color: rgba(244, 171, 159, 0.4); }
+.select-value-color-yellow { background-color: rgba(236, 191, 66, 0.39); }
+.select-value-color-blue { background-color: rgba(93, 165, 206, 0.27); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="1f3694d5-ea46-8070-b9a9-e9561271ac0c" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">🫠</span></div><h1 class="page-title">Express/Node-设置Node开发环境</h1><p class="page-description"></p></header><div class="page-body"><p id="1f3694d5-ea46-806f-86aa-dc604e7d3c13" class=""><mark class="highlight-red"><strong><span style="border-bottom:0.05em solid">设置Node开发环境</span></strong></mark></p><p id="1f3694d5-ea46-80dd-bc4a-c6c391946fd9" class="">
+</p><p id="1f3694d5-ea46-80f7-9435-f8cc694cf032" class=""><strong><span style="border-bottom:0.05em solid">Express开发环境是什么：</span></strong></p><ul id="1f3694d5-ea46-8055-99b3-ff4f177172be" class="bulleted-list"><li style="list-style-type:disc">完整的Express本地开发环境包括Node.js、NPM包管理器和Express应用生成器</li></ul><ul id="1f3694d5-ea46-80c7-b6b9-d75d47dfc009" class="bulleted-list"><li style="list-style-type:disc">Node和NPM包管理器可以用二进制包、安装程序或系统管理包一并安装。<ul id="1f3694d5-ea46-80f3-a61e-d4add7577958" class="bulleted-list"><li style="list-style-type:circle">在开发每个Express web应用时，由NPM针对当前应用将Express（以及模板引擎、数据库驱动程序、身份验证中间件、静态文件托管中间件等其他库）作为依赖项进行安装</li></ul></li></ul><ul id="1f3694d5-ea46-804e-bec0-e548a4db8c61" class="bulleted-list"><li style="list-style-type:disc">NPM也可以安装全局的Express应用生成器，可用于创建遵循MVC模式的Express应用框架。他不是必须的，因为无需这个工具就可以创建Express应用（使用相同的架构布局或依赖的Express应用）。他更容易上手，有助于应用结构的模块化管理<figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="1f3694d5-ea46-8088-85cb-ce5d6d751a10"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%"><p id="1f3694d5-ea46-8026-bc4a-deb99670775d" class="">与其他Web框架不同，开发环境不包含单独的开发Web服务器。在Node/Express种，Web应用程序将创建并运行自己的Web服务器</p></div></figure><ul id="1f3694d5-ea46-80e7-a366-c325b645e908" class="bulleted-list"><li style="list-style-type:circle">典型的开发环境中还需要一些外部工具，包裹用于编写代码的文本编辑器，用于代码控制管理的工具。</li></ul></li></ul><p id="1f3694d5-ea46-8072-982c-d0eb826e4c31" class="">
+</p><p id="1f3694d5-ea46-80dc-9c85-c098498d2d8c" class=""><strong><span style="border-bottom:0.05em solid">选择Node/EXpress的哪个版本：</span></strong></p><p id="1f3694d5-ea46-80a1-88db-f25bedca3dec" class="">Node选择长期支持版，Express选择最新版本</p><p id="1f3694d5-ea46-80a5-9127-c2420659eb2f" class="">
+</p><p id="1f3694d5-ea46-807b-aa80-f7f89a07b8b3" class=""><strong><span style="border-bottom:0.05em solid">选择数据库和其他依赖：</span></strong></p><p id="1f3694d5-ea46-80a4-a119-cf9800c10440" class="">
+</p><p id="1f3694d5-ea46-80f2-8b89-f846ef40a243" class=""><mark class="highlight-red"><strong><span style="border-bottom:0.05em solid">设置Node开发环境</span></strong></mark></p><p id="1f3694d5-ea46-8067-96a0-cc61f144730a" class=""><strong>【安装Node】：</strong></p><ul id="1f3694d5-ea46-80f5-a174-f12c1eb39863" class="bulleted-list"><li style="list-style-type:disc">现在系统上安装Nodejs和NPM之后才可以使用Express</li></ul><p id="1f3694d5-ea46-805a-8904-d3d42b551531" class="">
+</p><p id="1f3694d5-ea46-80ad-a42b-e033bb370bb3" class=""><strong>【测试Nodejs和NPM是否安装成功】：</strong></p><ul id="1f3694d5-ea46-80d5-a9ce-dd3afc2b6cc7" class="bulleted-list"><li style="list-style-type:disc">终端种运行version命令，查看版本号<ul id="1f3694d5-ea46-8097-9254-ebf0a84c6b10" class="bulleted-list"><li style="list-style-type:circle">node/npm -v/version</li></ul></li></ul><p id="1f3694d5-ea46-8045-bb6e-d90cdfadec17" class="">
+</p><p id="1f3694d5-ea46-8025-9209-f21933ffd958" class=""><strong>【测试：构建纯Node服务器】：</strong></p><ul id="1f3694d5-ea46-8074-a31f-f5d04cfc7325" class="bulleted-list"><li style="list-style-type:disc">hellonodejs文件中，编写Node特性与ES语法<blockquote id="1f3694d5-ea46-80d1-a725-cba593a91ecf" class="">// 加载 HTTP 模块<br/>const http = require(&quot;http&quot;);<br/>const hostname = &quot;127.0.0.1&quot;;<br/>const port = 3000;<br/><p id="1f3694d5-ea46-80cc-a941-d30588f6cc48" class="">// 创建 HTTP 服务器<br/>const server = http.createServer((req, res) =&gt; {<br/>    // 设置 HTTP 响应头：状态码和内容类型<br/>    res.statusCode = 200;<br/>    res.setHeader(&quot;Content-Type&quot;, &quot;text/plain&quot;);<br/></p><p id="1f3694d5-ea46-8019-bc26-c4c4e654e125" class="">// 发送响应体<br/>    res.end(&quot;Hello World\n&quot;);<br/>});<br/></p><p id="1f3694d5-ea46-8087-83c0-cf7bcd6f94ca" class="">// 启动服务器监听指定端口<br/>server.listen(port, hostname, () =&gt; {<br/>    console.log(<br/><code>服务器运行于 &amp;lt;http://$&amp;gt;{hostname}:${port}/</code>);<br/>});<br/></p></blockquote><ul id="1f3694d5-ea46-80bd-b190-dcf7ad616e6d" class="bulleted-list"><li style="list-style-type:circle">代码导入了http模块，并使用它创建了一个服务器来监听端口的HTTP请求。随后在控制台打印一条信息，提示测试服务器的正确URL。</li></ul><ul id="1f3694d5-ea46-80cd-af53-e24d546cd83d" class="bulleted-list"><li style="list-style-type:circle">createServer（）函数接受一个回调函数作为参数，并在接收到HTTP请求后进行回调，直接返回HTTP状态码，以及纯文本信息</li></ul></li></ul><ul id="1f3694d5-ea46-808f-90a0-ce59e9eaed2f" class="bulleted-list"><li style="list-style-type:disc">命令行工具中进入hellonodejs文件夹，输入node + 文件名，运行，启动服务器<ul id="1f3694d5-ea46-800e-84e0-d2b166d15f94" class="bulleted-list"><li style="list-style-type:circle">node hellonodejs</li></ul><ul id="1f3694d5-ea46-801e-a5ec-d77425cc85f1" class="bulleted-list"><li style="list-style-type:circle">服务器启动后，查看控制台输出，服务器运行的IP地址</li></ul></li></ul><ul id="1f3694d5-ea46-804e-bbbf-d1f41e7f95a9" class="bulleted-list"><li style="list-style-type:disc">浏览器中访问URL ip地址。</li></ul><p id="1f3694d5-ea46-80d2-af03-e30759a8111f" class="">
+</p><p id="1f3694d5-ea46-80c4-9064-f9d346e2074a" class=""><strong>【使用NPM】：</strong></p><ul id="1f3694d5-ea46-8041-aac0-f8d5254def3b" class="bulleted-list"><li style="list-style-type:disc">构建Node应用过程中，NPM是除了Node本身之外最重要的工具，用于获取应用开发、测试以及生产所需要的所有包（JS库）。也可以运行开发过程中使用的测试单元和工具<figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="1f3694d5-ea46-801f-b837-e25575bb49e2"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%"><p id="1f3694d5-ea46-8029-a186-fd16f1d506ab" class="">Node角度，Express只是一个NPM安装、用于使用的包</p></div></figure></li></ul><ul id="1f3694d5-ea46-807e-9125-c8874556a990" class="bulleted-list"><li style="list-style-type:disc">可以使用NPM手动安装图所需的包，在package.json文件中管理依赖，把每个依赖以JS包的形式罗列在文件中（包括名称、版本、描述、初始执行文件、生产依赖、开发依赖、支持的Node版本等等），package.json文件包含NPM获取和运行应用程序所需的所有内容（在编写可以重复使用的库时，可以把包上传到NPM仓库供其他用户使用）</li></ul><p id="1f3694d5-ea46-8073-98df-c2f79b36b8c5" class="">
+</p><p id="1f3694d5-ea46-8016-9508-d7116405a022" class=""><strong>【添加依赖项】：</strong></p><ul id="1f3694d5-ea46-80c8-8690-c8a981bf34d1" class="bulleted-list"><li style="list-style-type:disc">使用NPM下载包、将包保存进工程依赖书，以及Node应用中调用包的方法与步骤。<ul id="1f3694d5-ea46-80b8-b393-f13076f79f72" class="bulleted-list"><li style="list-style-type:circle">为新应用创建目录，并进入</li></ul><ul id="1f3694d5-ea46-80ae-abf1-cdf3ed290af0" class="bulleted-list"><li style="list-style-type:circle">使用NPM的init命令为应用创建package.json文件。这个命令将请求一系列的信息，包括应用的名称和版本，程序初始进入点的文件名（默认index.js）<ul id="1f3694d5-ea46-807d-9074-c8926e20eace" class="bulleted-list"><li style="list-style-type:square">npm init<ul id="1f3694d5-ea46-803e-bc39-c0033be2490c" class="bulleted-list"><li style="list-style-type:disc">package.json文件中保存了接受的默认信息，最后一条为许可证信息</li></ul></li></ul></li></ul><ul id="1f3694d5-ea46-80fe-83e5-e0b0b5e4aeb6" class="bulleted-list"><li style="list-style-type:circle">在myapp目录种安装Express，将Express保存在package.json文件中的依赖表里<ul id="1f3694d5-ea46-80fd-98d9-e2a3ed8166bf" class="bulleted-list"><li style="list-style-type:square">npm install express<ul id="1f3694d5-ea46-8072-ab02-f1c025056519" class="bulleted-list"><li style="list-style-type:disc">package.jso文件的底部会出现依赖列表（dependency），其中包含Express</li></ul></li></ul></li></ul><ul id="1f3694d5-ea46-808b-be46-de7033bda0c5" class="bulleted-list"><li style="list-style-type:circle">可以使用require（）函数来使用库，index.js文件<blockquote id="1f3694d5-ea46-80e7-b410-e37f2f97c31b" class="">const express = require(&quot;express&quot;);<br/>const app = express();<br/>const port = 3000;<br/><p id="1f3694d5-ea46-808f-8764-e7f768999259" class="">app.get(&quot;/&quot;, (req, res) =&gt; {<br/>  res.send(&quot;Hello World!&quot;);<br/>});<br/></p><p id="1f3694d5-ea46-8099-b562-feac3ea4d915" class="">app.listen(port, () =&gt; {<br/>  console.log(<br/><code>示例程序正在监听 ${port} 端口！</code>);<br/>});<br/></p></blockquote><ul id="1f3694d5-ea46-8095-8d63-ec2d44a316d2" class="bulleted-list"><li style="list-style-type:square">代码展示了最简单的Express应用，导入了express模块并使用它创建类一个服务器app来监听3000端口，并且在控制台打印了一条信息来测试服务器的正确URL，</li></ul><ul id="1f3694d5-ea46-80c6-8f2c-e5889c268e8d" class="bulleted-list"><li style="list-style-type:square">app.get（）函数只响应对特定路径（‘/’）的HTTP GET请求，此处响应就是发送helloworld</li></ul></li></ul><ul id="1f3694d5-ea46-803c-bfee-c137f200dd73" class="bulleted-list"><li style="list-style-type:circle">在命令行种使用脚本调用node来启动服务器</li></ul><ul id="1f3694d5-ea46-8099-9162-df6a553a0eeb" class="bulleted-list"><li style="list-style-type:circle">浏览器中访问URL</li></ul></li></ul><p id="1f3694d5-ea46-8092-8973-f05798875229" class="">
+</p><p id="1f3694d5-ea46-8084-b89b-fb56928b8367" class=""><strong>【开发依赖】：</strong></p><ul id="1f3694d5-ea46-80fa-b30b-d802a6f6fa66" class="bulleted-list"><li style="list-style-type:disc">如果一个依赖只在开发过程中使用，应该将其保存为开发以来（这样，用户无需再生产环境种安装他们），比如，要使用eslint可以调用NPM<ul id="1f3694d5-ea46-80f1-88d5-f2d0cabaab4a" class="bulleted-list"><li style="list-style-type:circle">npm install eslint —save-dev</li></ul></li></ul><ul id="1f3694d5-ea46-8069-be2a-c71d69b5313f" class="bulleted-list"><li style="list-style-type:disc">当前的package.json文件中会自动添加以下项目<ul id="1f3694d5-ea46-80fd-a139-d4f0c9f39d42" class="bulleted-list"><li style="list-style-type:circle">“devDependencies”：{<ul id="1f3694d5-ea46-80df-ba01-fbdcc8cbbacc" class="bulleted-list"><li style="list-style-type:square">“eslint：“^版本””</li></ul></li></ul><ul id="1f3694d5-ea46-8032-88d8-f0c0b62db4f2" class="bulleted-list"><li style="list-style-type:circle">}</li></ul></li></ul><p id="1f3694d5-ea46-8051-9d6b-cab24b40230f" class="">
+</p><p id="1f3694d5-ea46-80b0-a1e7-c0b91eb4d042" class=""><strong>【运行任务】</strong></p><ul id="1f3694d5-ea46-80a4-a579-f5c43b87977c" class="bulleted-list"><li style="list-style-type:disc">在package.json种，除了定义和获取依赖，也可以定义脚本，然后通过NPM的 run-script命令来运行，这个用法普遍用于自动运行测试单元或部分应用，也可以用于构建工具链（比如运行工具来压缩JS文件或图片，init或分析代码，等等）<ul id="1f3694d5-ea46-800a-85b0-ffd559652b92" class="bulleted-list"><li style="list-style-type:circle">比如在package.json文件夹中添加以下内容来定义脚本，从而对上文的代码运行eslint<ul id="1f3694d5-ea46-80aa-a9de-f28fcaacf325" class="bulleted-list"><li style="list-style-type:square">&quot;scripts&quot;: {<br/>...<br/>&quot;lint&quot;: &quot;eslint src/js&quot;<br/>...<br/>}<br/><ul id="1f3694d5-ea46-801e-8c2d-eda2d8d0375e" class="bulleted-list"><li style="list-style-type:disc">eslint src/js命令可以把终端/命令行对应用目录下的src/js目录中的JS文件运行eslint。把上述脚本添加进应用的package.json种还可以为此命令添加一个快捷方式-lint</li></ul></li></ul></li></ul><ul id="1f3694d5-ea46-801c-8324-f56ed7482855" class="bulleted-list"><li style="list-style-type:circle">之后就可以使用npm来运行eslint<ul id="1f3694d5-ea46-804f-b7df-de80f1949571" class="bulleted-list"><li style="list-style-type:square">npm run-script lint<ul id="1f3694d5-ea46-800c-85ac-ce82dfeadcaa" class="bulleted-list"><li style="list-style-type:disc">或者</li></ul></li></ul><ul id="1f3694d5-ea46-802d-8b0f-f981fbc246dd" class="bulleted-list"><li style="list-style-type:square">npm run lint</li></ul></li></ul></li></ul><ul id="1f3694d5-ea46-8017-afc9-d1133b8370a0" class="bulleted-list"><li style="list-style-type:disc">可以在NPM脚本中加入更长的命令，多条命令链，可以让单一的NPM脚本来一次运行所有的测试单元</li></ul><p id="1f3694d5-ea46-8085-9362-c6feefe74211" class="">
+</p><p id="1f3694d5-ea46-80dd-9187-d120868e218f" class=""><strong>【安装Express应用生成器】：</strong></p><ul id="1f3694d5-ea46-800c-8386-f388c5af5ad4" class="bulleted-list"><li style="list-style-type:disc">Express应用生成器构建可以生成一个Express应用的框架，可以使用NPM安装 -g全局安装<ul id="1f3694d5-ea46-807d-8a06-e4ef63f078e0" class="bulleted-list"><li style="list-style-type:circle">npm install express-generator -g</li></ul></li></ul><ul id="1f3694d5-ea46-80f8-a245-d5b70d13587e" class="bulleted-list"><li style="list-style-type:disc">进入应用目录，运行以下命令，即可创建一个名为helloworld的Express<ul id="1f3694d5-ea46-804d-bd4b-fc5e7b04b702" class="bulleted-list"><li style="list-style-type:circle">express helloworld</li></ul><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="1f3694d5-ea46-80a6-8798-f71ee8e6ece6"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%"><p id="1f3694d5-ea46-802b-8bb5-d58f81b4b9b6" class="">也可以使用指定模板库来使用丰富的设置，通过express —help查看所有选项</p></div></figure></li></ul><ul id="1f3694d5-ea46-8087-b751-e0d5fd2fc909" class="bulleted-list"><li style="list-style-type:disc">NPM在当前位置的子目录创建新的Express应用，可以在控制台查看到构建的过程，完成后NPM会提示需要安装哪些Node依赖，以及如何开启应用<ul id="1f3694d5-ea46-804d-a306-c62aaaff2cb9" class="bulleted-list"><li style="list-style-type:circle">进入目录安装依赖<ul id="1f3694d5-ea46-8059-9348-e0d95989b68a" class="bulleted-list"><li style="list-style-type:square">npm install</li></ul></li></ul><ul id="1f3694d5-ea46-8027-9d1b-e93ca53be668" class="bulleted-list"><li style="list-style-type:circle">运行应用<ul id="1f3694d5-ea46-80cd-b8f8-e7c6cb40d9fc" class="bulleted-list"><li style="list-style-type:square">SET DEBUG=helloworld:* &amp; npm start</li></ul></li></ul><ul id="1f3694d5-ea46-8043-b3fc-f7304f29d25e" class="bulleted-list"><li style="list-style-type:circle">Debug命令可以展示应用运行时返回的有用的日志信息</li></ul><ul id="1f3694d5-ea46-80fd-8d28-d99fba9fc4aa" class="bulleted-list"><li style="list-style-type:circle">打开IP可以看到Express的默认欢迎页面</li></ul></li></ul></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
