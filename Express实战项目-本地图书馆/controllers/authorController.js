@@ -1,14 +1,42 @@
 const Author = require("../models/author");
 const asyncHandler = require("express-async-handler");
-
+const Book = require("../models/book");
 // 显示完整的作者列表
-exports.author_list = (req, res) => {
-  res.send("未实现：作者列表");
+exports.author_list = async function (req, res, next) {
+  try {
+    const list_authors = await Author.find().sort({ family_name: 1 }).exec();
+
+    // 成功后渲染模板
+    res.render("author_list", {
+      title: "Author List",
+      author_list: list_authors,
+    });
+  } catch (err) {
+    next(err);
+  }
 };
 
 // 为每位作者显示详细信息的页面
+// 呈现指定作者的详情页。
 exports.author_detail = asyncHandler(async (req, res, next) => {
-  res.send("未实现：作者详细信息：" + req.params.id);
+  // （并行地）获取作者的详细信息及其所有作品
+  const [author, allBooksByAuthor] = await Promise.all([
+    Author.findById(req.params.id).exec(),
+    Book.find({ author: req.params.id }, "title summary").exec(),
+  ]);
+
+  if (author === null) {
+    // 没有结果。
+    const err = new Error("Author not found");
+    err.status = 404;
+    return next(err);
+  }
+
+  res.render("author_detail", {
+    title: "Author Detail",
+    author: author,
+    author_books: allBooksByAuthor,
+  });
 });
 
 // 由 GET 显示创建作者的表单

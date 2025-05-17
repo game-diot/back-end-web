@@ -2,13 +2,34 @@ const BookInstance = require("../models/bookinstance");
 const asyncHandler = require("express-async-handler");
 
 // 显示所有的 BookInstances
+// 呈现所有书本实例（BookInstance）的列表
 exports.bookinstance_list = asyncHandler(async (req, res, next) => {
-  res.send("未实现：BookInstance 列表");
+  const allBookInstances = await BookInstance.find().populate("book").exec();
+
+  res.render("bookinstance_list", {
+    title: "Book Instance List",
+    bookinstance_list: allBookInstances,
+  });
 });
 
 // 显示特定 BookInstance 的详情页
+// 展示特定 BookInstance 的详情页。
 exports.bookinstance_detail = asyncHandler(async (req, res, next) => {
-  res.send(`未实现：BookInstance 详情页面：${req.params.id}`);
+  const bookInstance = await BookInstance.findById(req.params.id)
+    .populate("book")
+    .exec();
+
+  if (bookInstance === null) {
+    // 没有结果。
+    const err = new Error("Book copy not found");
+    err.status = 404;
+    return next(err);
+  }
+
+  res.render("bookinstance_detail", {
+    title: "Book:",
+    bookinstance: bookInstance,
+  });
 });
 
 // 由 GET 显示创建 BookInstance 的表单

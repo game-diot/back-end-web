@@ -1,18 +1,69 @@
 const Book = require("../models/book");
+const Author = require("../models/author");
+const Genre = require("../models/genre");
+const BookInstance = require("../models/bookinstance");
+
 const asyncHandler = require("express-async-handler");
 
 exports.index = asyncHandler(async (req, res, next) => {
-  res.send("未实现：网站主页");
+  // 并行获取书的详细信息、书实例、作者和体裁的数量
+  const [
+    numBooks,
+    numBookInstances,
+    numAvailableBookInstances,
+    numAuthors,
+    numGenres,
+  ] = await Promise.all([
+    Book.countDocuments({}).exec(),
+    BookInstance.countDocuments({}).exec(),
+    BookInstance.countDocuments({ status: "Available" }).exec(),
+    Author.countDocuments({}).exec(),
+    Genre.countDocuments({}).exec(),
+  ]);
+
+  res.render("index", {
+    title: "Local Library Home",
+    book_count: numBooks,
+    book_instance_count: numBookInstances,
+    book_instance_available_count: numAvailableBookInstances,
+    author_count: numAuthors,
+    genre_count: numGenres,
+  });
 });
 
 // 显示所有的图书
+// 呈现数据库中所有书本的列表
 exports.book_list = asyncHandler(async (req, res, next) => {
-  res.send("未实现：图书列表");
+  const allBooks = await Book.find({}, "title author")
+    .sort({ title: 1 })
+    .populate("author")
+    .exec();
+
+  res.render("book_list", { title: "Book List", book_list: allBooks });
 });
 
 // 显示特定图书的详情页面。
+// 显示特定书籍的详细信息页面。
+// 显示特定书籍的详细信息页面。
 exports.book_detail = asyncHandler(async (req, res, next) => {
-  res.send(`未实现：图书详情页面：${req.params.id}`);
+  // 获取书籍的详细信息，以及特定书籍的实例
+  const [book, bookInstances] = await Promise.all([
+    Book.findById(req.params.id).populate("author").populate("genre").exec(),
+    BookInstance.find({ book: req.params.id }).exec(),
+  ]);
+
+  if (book === null) {
+    // 没有结果。
+    const err = new Error("Book not found");
+    err.status = 404;
+    return next(err);
+  }
+
+  res.render("book_detail", {
+    title: book.title,
+    book: book,
+    book_instances: bookInstances,
+  });
 });
 
 // 通过 GET 显示创建图书。
