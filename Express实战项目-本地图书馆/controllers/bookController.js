@@ -2,6 +2,7 @@ const Book = require("../models/book");
 const Author = require("../models/author");
 const Genre = require("../models/genre");
 const BookInstance = require("../models/bookinstance");
+const { body, validationResult } = require("express-validator");
 
 const asyncHandler = require("express-async-handler");
 
@@ -65,16 +66,100 @@ exports.book_detail = asyncHandler(async (req, res, next) => {
     book_instances: bookInstances,
   });
 });
+const async = require("async");
 
 // 通过 GET 显示创建图书。
-exports.book_create_get = asyncHandler(async (req, res, next) => {
-  res.send("未实现：创建图书 GET");
-});
+// Display book create form on GET.
+exports.book_create_get = async function (req, res, next) {
+  try {
+    // 使用 Promise.all 并行获取数据
+    const [authors, genres] = await Promise.all([
+      Author.find().exec(),
+      Genre.find().exec(),
+    ]);
+
+    // 渲染页面
+    res.render("book_form", {
+      title: "Create Book",
+      authors: authors,
+      genres: genres,
+    });
+  } catch (err) {
+    return next(err);
+  }
+};
 
 // 以 POST 方式处理创建图书。
-exports.book_create_post = asyncHandler(async (req, res, next) => {
-  res.send("未实现：Book 创建 POST");
-});
+// Handle book create on POST.
+exports.book_create_post = [
+  // Convert the genre to an array.
+  (req, res, next) => {
+    if (!(req.body.genre instanceof Array)) {
+      if (typeof req.body.genre === "undefined") req.body.genre = [];
+      else req.body.genre = new Array(req.body.genre);
+    }
+    next();
+  },
+
+  // Validate and sanitize fields.
+  body("title", "Title must not be empty.")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("author", "Author must not be empty.")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("summary", "Summary must not be empty.")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("isbn", "ISBN must not be empty.").trim().isLength({ min: 1 }).escape(),
+  body("genre.*").escape(), // 对数组中的每一项进行 escape
+
+  // Process request after validation and sanitization.
+  (req, res, next) => {
+    const errors = validationResult(req);
+
+    const book = new Book({
+      title: req.body.title,
+      author: req.body.author,
+      summary: req.body.summary,
+      isbn: req.body.isbn,
+      genre: req.body.genre,
+    });
+
+    if (!errors.isEmpty()) {
+      async.parallel(
+        {
+          authors: (callback) => Author.find(callback),
+          genres: (callback) => Genre.find(callback),
+        },
+        (err, results) => {
+          if (err) return next(err);
+
+          for (let i = 0; i < results.genres.length; i++) {
+            if (book.genre.indexOf(results.genres[i]._id) > -1) {
+              results.genres[i].checked = "true";
+            }
+          }
+          res.render("book_form", {
+            title: "Create Book",
+            authors: results.authors,
+            genres: results.genres,
+            book: book,
+            errors: errors.array(),
+          });
+        }
+      );
+    } else {
+      book.save((err) => {
+        if (err) return next(err);
+        res.redirect(book.url);
+      });
+    }
+  },
+];
 
 // 通过 GET 显示删除图书。
 exports.book_delete_get = asyncHandler(async (req, res, next) => {
@@ -87,11 +172,112 @@ exports.book_delete_post = asyncHandler(async (req, res, next) => {
 });
 
 // 通过 GET 显示更新图书。
-exports.book_update_get = asyncHandler(async (req, res, next) => {
-  res.send("未实现：更新图书 GET");
-});
+exports.book_update_get = async function (req, res, next) {
+  try {
+    const [book, authors, genres] = await Promise.all([
+      Book.findById(req.params.id).populate("author").populate("genre").exec(),
+      Author.find().exec(),
+      Genre.find().exec(),
+    ]);
 
-// 处理 POST 时的更新图书。
-exports.book_update_post = asyncHandler(async (req, res, next) => {
-  res.send("未实现：更新图书 POST");
-});
+    if (!book) {
+      const err = new Error("Book not found");
+      err.status = 404;
+      throw err;
+    }
+
+    // 标记已选择的 genre
+    for (const genre of genres) {
+      if (book.genre.some((g) => g._id.toString() === genre._id.toString())) {
+        genre.checked = true;
+      }
+    }
+
+    res.render("book_form", {
+      title: "Update Book",
+      authors,
+      genres,
+      book,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Handle book update on POST.
+exports.book_update_post = [
+  // Convert genre to array
+  (req, res, next) => {
+    if (!Array.isArray(req.body.genre)) {
+      if (typeof req.body.genre === "undefined") {
+        req.body.genre = [];
+      } else {
+        req.body.genre = [req.body.genre];
+      }
+    }
+    next();
+  },
+
+  // Validate and sanitize fields
+  body("title", "Title must not be empty").trim().isLength({ min: 1 }).escape(),
+  body("author", "Author must not be empty")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("summary", "Summary must not be empty")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("isbn", "ISBN must not be empty").trim().isLength({ min: 1 }).escape(),
+  body("genre.*").trim().escape(),
+
+  // Process request
+  async (req, res, next) => {
+    const errors = validationResult(req);
+
+    const book = new Book({
+      title: req.body.title,
+      author: req.body.author,
+      summary: req.body.summary,
+      isbn: req.body.isbn,
+      genre: req.body.genre,
+      _id: req.params.id, // 需要保持原ID
+    });
+
+    if (!errors.isEmpty()) {
+      try {
+        const [authors, genres] = await Promise.all([
+          Author.find().exec(),
+          Genre.find().exec(),
+        ]);
+
+        // 标记已选 genre
+        for (const genre of genres) {
+          if (book.genre.includes(genre._id.toString())) {
+            genre.checked = true;
+          }
+        }
+
+        res.render("book_form", {
+          title: "Update Book",
+          authors,
+          genres,
+          book,
+          errors: errors.array(),
+        });
+      } catch (err) {
+        next(err);
+      }
+      return;
+    }
+
+    try {
+      const thebook = await Book.findByIdAndUpdate(req.params.id, book, {
+        new: true,
+      });
+      res.redirect(thebook.url);
+    } catch (err) {
+      next(err);
+    }
+  },
+];
